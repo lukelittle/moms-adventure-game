@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1c2c">
+  <meta name="description" content="Odyssey — a cheerful top-down adventure. Recover three sacred relics and rescue the village elder!">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Odyssey">
+  <title>Odyssey</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="stage">
+    <canvas id="screen" aria-label="Odyssey game screen"></canvas>
+
+    <div id="banner" aria-live="polite"></div>
+
+    <div id="dialog" class="hidden" role="dialog" aria-live="polite">
+      <div id="dialog-name"></div>
+      <div id="dialog-text"></div>
+      <div id="dialog-next">▼</div>
+    </div>
+
+    <!-- Title screen -->
+    <div id="title" class="overlay">
+      <div class="panel title-panel">
+        <h1 class="logo">ODYSSEY</h1>
+        <p class="subtitle">A Tale of Three Relics</p>
+        <div class="menu">
+          <button id="title-continue" class="btn primary">Continue</button>
+          <button id="title-new" class="btn">New Game</button>
+          <button id="title-help" class="btn small">How to Play</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause menu -->
+    <div id="pause" class="overlay hidden">
+      <div class="panel">
+        <h2>Paused</h2>
+        <div id="pause-inv" class="inv"></div>
+        <p class="goal"><strong>Quest:</strong> <span id="pause-goal"></span></p>
+        <p id="pause-stats" class="stats"></p>
+        <div class="menu row">
+          <button id="pause-resume" class="btn primary">Resume</button>
+          <button id="pause-sound" class="btn">Sound: On</button>
+          <button id="pause-help" class="btn">Controls</button>
+          <button id="pause-title" class="btn">Save &amp; Quit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help / controls -->
+    <div id="help" class="overlay hidden">
+      <div class="panel">
+        <h2>How to Play</h2>
+        <table class="controls">
+          <tr><th></th><th>Phone</th><th>Keyboard</th></tr>
+          <tr><td>Move</td><td>Left thumb stick</td><td>Arrows / WASD</td></tr>
+          <tr><td>Attack / Talk</td><td>Attack</td><td>J, Z or Space</td></tr>
+          <tr><td>Jump</td><td>Jump</td><td>K or X</td></tr>
+          <tr><td>Roll (dodge)</td><td>Roll</td><td>L, C or Shift</td></tr>
+          <tr><td>Spin attack</td><td>Spin</td><td>I or V</td></tr>
+          <tr><td>Pause</td><td>❚❚ button</td><td>Esc, P or Enter</td></tr>
+          <tr><td>Mute</td><td>🔊 button</td><td>M</td></tr>
+        </table>
+        <ul class="tips">
+          <li>Walk up to people, signs and chests and press <b>Attack</b> to interact.</li>
+          <li><b>Jump</b> over pits, fences and bushes. <b>Roll</b> through danger — you can't be hurt mid-roll.</li>
+          <li>Push stone blocks by walking into them. Locked doors open when you walk into them with a key.</li>
+          <li>Your progress saves automatically. If you faint, you'll wake up where you entered the area.</li>
+        </ul>
+        <div class="menu"><button id="help-close" class="btn primary">Got it!</button></div>
+      </div>
+    </div>
+
+    <!-- Game over -->
+    <div id="gameover" class="overlay hidden">
+      <div class="panel">
+        <h2>You fainted!</h2>
+        <p>Don't give up — a true hero always gets back up.</p>
+        <div class="menu"><button id="gameover-continue" class="btn primary">Try Again</button></div>
+      </div>
+    </div>
+
+    <!-- Ending -->
+    <div id="ending" class="overlay hidden">
+      <div class="panel ending-panel">
+        <h1 class="logo small">THE END</h1>
+        <p>With the three sacred relics restored and Elder Rowan safely home, the light returns to Odyssey.</p>
+        <p>The people of Willowbrook will sing of your courage for generations to come.</p>
+        <p class="thanks">Thank you for playing!</p>
+        <p id="ending-stats" class="stats"></p>
+        <div class="menu row">
+          <button id="ending-continue" class="btn primary">Keep Exploring</button>
+          <button id="ending-title" class="btn">Title Screen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Corner buttons -->
+  <div id="corner">
+    <button id="btn-mute" class="corner-btn" aria-label="Mute">🔊</button>
+    <button id="btn-pause" class="corner-btn" aria-label="Pause">❚❚</button>
+  </div>
+
+  <!-- Touch controls (shown on phones and tablets) -->
+  <div id="touch">
+    <div id="stick-zone">
+      <div id="stick-base"><div id="stick-knob"></div></div>
+    </div>
+    <div id="buttons">
+      <div class="tbtn" id="b-spin" data-act="spin"><span>Spin</span></div>
+      <div class="tbtn" id="b-jump" data-act="jump"><span>Jump</span></div>
+      <div class="tbtn" id="b-roll" data-act="roll"><span>Roll</span></div>
+      <div class="tbtn big" id="b-attack" data-act="attack"><span>Attack</span></div>
+    </div>
+  </div>
+
+  <script src="js/maps.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
